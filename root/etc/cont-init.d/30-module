@@ -2,6 +2,26 @@
 
 mkdir -p /config/{templates,coredns}
 
+# check if userspace version is requested and install if necessary
+if [ -n "$WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD" ]; then
+  if ! hash wiregaurd-go &> /dev/null; then
+    echo "**** Installing userspace ****"
+    cd /tmp
+    wget -q https://dl.google.com/go/go1.17.5.linux-amd64.tar.gz
+    tar zxf go1.17.5.linux-amd64.tar.gz
+    mv go /opt/go1.17.5
+    ln -s /opt/go1.17.5/bin/go /usr/local/bin/go
+
+    cd /usr/local/src
+    git clone -q https://git.zx2c4.com/wireguard-go
+    cd wireguard-go
+    make
+    cp wireguard-go /usr/local/bin
+  fi
+
+  exit 0
+fi
+
 echo "Uname info: $(uname -a)"
 # check for wireguard module
 ip link del dev test 2>/dev/null

@@ -18,6 +18,7 @@ RUN \
 	curl \
 	dkms \
 	git \
+	wget \
 	gnupg \ 
 	ifupdown \
 	iproute2 \
